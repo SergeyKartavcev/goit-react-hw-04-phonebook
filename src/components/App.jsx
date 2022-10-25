@@ -4,23 +4,22 @@ import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import Container from './Container/Container';
 import shortid from 'shortid';
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
   // useEffect(() => {
-  //   window.JSON.parse(localStorage.getItem('contacts'));
+  //   window.localStorage.getItem(('contacts',JSON.parse(contacts)));
   //   if (contacts) {
   //     setContacts({ contacts });
   //   }
   // }, [contacts]);
 
-
-   useEffect(() => {
-     window.localStorage.setItem("contacts", JSON.stringify(contacts));
-   }, [contacts]); 
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = (name, number) => {
     const contact = {
@@ -28,20 +27,17 @@ function App() {
       name,
       number,
     };
-    
-    if (
-      setContacts(contact => contact.name === name)) {
+
+    if (setContacts(contact => contact.name === name)) {
       alert(`${name} is already in contacts.`);
     } else if (setContacts(contact => contact.number === number)) {
       alert(`${number} is already in contacts.`);
     } else if (name.trim() === '' || number.trim() === '') {
       alert("Enter the contact's name and number phone!");
     } else {
-     
       setContacts([contact]);
- console.log(contact)
+      console.log(contact);
     }
-    
   };
 
   const deleteContact = contactId => {
@@ -53,12 +49,7 @@ function App() {
   };
 
   const getVisibleContacts = () => {
-    
-  
-
-    return setFilter(contact =>
-      contact.name.toLowerCase().includes(filter)
-    );
+    return setFilter(contact => contact.name.toLowerCase().includes(filter));
   };
 
   return (
