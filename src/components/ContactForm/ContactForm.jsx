@@ -12,26 +12,22 @@ function ContactForm({onSubmit}) {
   const handleSubmit = e => {
     e.preventDefault();
 
-    onSubmit(name, number);
-    setName ('');
-    setNumber('');
-
+    onSubmit({name, number});
+    Reset();
   
   };
 
-  const handleChange = e => {
-    const { name, value } = e.currentTarget;
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
+  const Reset = () => {
+    setName('');
+    setNumber('');
+  }
 
-      case 'number':
-        setNumber(value);
-        break;
-      default:
-        return;
-    }
+  const onChangeName = e => {
+    setName(e.currentTarget.value);    
+  };
+
+  const onChangeTel = e => {
+      setNumber(e.currentTarget.value);
   };
 
   return (
@@ -46,7 +42,7 @@ function ContactForm({onSubmit}) {
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
           value={name}
-          onChange={handleChange}
+          onChange={onChangeName}
         />
       </label>
       <label className={s.contact_label}>
@@ -56,7 +52,7 @@ function ContactForm({onSubmit}) {
           type="text"
           name="number"
           value={number}
-          onChange={handleChange}
+          onChange={onChangeTel}
         />
       </label>
       <button className={s.contact_button} type="submit">

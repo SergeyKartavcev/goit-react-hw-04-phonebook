@@ -3,55 +3,44 @@ import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import Container from './Container/Container';
-import shortid from 'shortid';
-import { useState, useEffect } from 'react';
+// import shortid from 'shortid';
+import { useState } from 'react';
 
 function App() {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState([
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ]);
   const [filter, setFilter] = useState('');
 
-  // useEffect(() => {
-  //   window.localStorage.getItem(('contacts',JSON.parse(contacts)));
-  //   if (contacts) {
-  //     setContacts({ contacts });
-  //   }
-  // }, [contacts]);
-
-  useEffect(() => {
-    window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
   const addContact = (name, number) => {
-    const contact = {
-      id: shortid.generate(),
-      name,
-      number,
-    };
-
-    if (setContacts(contact => contact.name === name)) {
+    
+    if (contacts.find(contact => contact.name === name)) {
       alert(`${name} is already in contacts.`);
-    } else if (setContacts(contact => contact.number === number)) {
+      return;
+    } else if (contacts.find(contact => contact.number === number)) {
       alert(`${number} is already in contacts.`);
-    } else if (name.trim() === '' || number.trim() === '') {
-      alert("Enter the contact's name and number phone!");
-    } else {
-      setContacts([contact]);
-      console.log(contact);
-    }
+      return;
+    } 
   };
 
   const deleteContact = contactId => {
     setContacts(contacts.filter(({ id }) => id !== contactId));
   };
 
-  const changeFilter = e => {
+  const changeFilter = filteer => {
     setFilter(filter);
   };
 
   const getVisibleContacts = () => {
-    return setFilter(contact => contact.name.toLowerCase().includes(filter));
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter)
+    );
   };
-
+  const visibleContacts = getVisibleContacts();
+  console.log(visibleContacts);
   return (
     <Container>
       <h1>Phonebook</h1>
@@ -60,7 +49,9 @@ function App() {
       {contacts.length > 1 && <Filter value={filter} onChange={changeFilter} />}
       {contacts.length > 0 ? (
         <ContactList
-          contacts={getVisibleContacts}
+          filter={filter}
+          onChangeFilter={changeFilter}
+          contacts={visibleContacts}
           onDeleteContact={deleteContact}
         />
       ) : (
