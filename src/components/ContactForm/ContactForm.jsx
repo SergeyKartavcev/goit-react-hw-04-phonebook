@@ -3,33 +3,42 @@ import PropTypes from 'prop-types';
 import s from './ContactForm.module.css';
 import { useState } from 'react';
 
-
-function ContactForm({onSubmit}) {
+function ContactForm({ onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    onSubmit({name, number});
-    Reset();
-  
-  };
+    if (!name || !number) {
+      alert('Вы не ввели все контактные данные');
+      return;
+    }
 
-  const Reset = () => {
+    if (Number.isNaN(+number)) {
+      alert('Телефонный номер должен содержать только цифры');
+      return;
+    }
+
+    onSubmit(name, number);
     setName('');
     setNumber('');
-  }
-
-  const onChangeName = e => {
-    setName(e.currentTarget.value);    
   };
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
 
-  const onChangeTel = e => {
-      setNumber(e.currentTarget.value);
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        return;
+    }
   };
-
   return (
     <form className={s.form} onSubmit={handleSubmit}>
       <label className={s.contact_label}>
@@ -39,10 +48,8 @@ function ContactForm({onSubmit}) {
           type="text"
           name="name"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          required
           value={name}
-          onChange={onChangeName}
+          onChange={handleInputChange}
         />
       </label>
       <label className={s.contact_label}>
@@ -52,10 +59,14 @@ function ContactForm({onSubmit}) {
           type="text"
           name="number"
           value={number}
-          onChange={onChangeTel}
+          onChange={handleInputChange}
         />
       </label>
-      <button className={s.contact_button} type="submit">
+      <button
+        className={s.contact_button}
+        type="submit"
+        onSubmit={handleSubmit}
+      >
         add contact
       </button>
     </form>

@@ -3,40 +3,41 @@ import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import Container from './Container/Container';
-// import shortid from 'shortid';
+import shortid from 'shortid';
 import { useState } from 'react';
 
 function App() {
-  const [contacts, setContacts] = useState([
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
+  const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
   const addContact = (name, number) => {
-    
+    const contact = {
+      id: shortid.generate(),
+      name,
+      number,
+    };
     if (contacts.find(contact => contact.name === name)) {
       alert(`${name} is already in contacts.`);
       return;
     } else if (contacts.find(contact => contact.number === number)) {
       alert(`${number} is already in contacts.`);
       return;
-    } 
+    }
+    setContacts(prevState => [...prevState, contact]);
+    console.log(contact)
   };
 
   const deleteContact = contactId => {
     setContacts(contacts.filter(({ id }) => id !== contactId));
   };
 
-  const changeFilter = filteer => {
-    setFilter(filter);
+  const changeFilter =  e => {    
+    setFilter( e.currentTarget.value)
   };
 
   const getVisibleContacts = () => {
     return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter)
+      contact.name.toLowerCase().includes(filter),
     );
   };
   const visibleContacts = getVisibleContacts();
